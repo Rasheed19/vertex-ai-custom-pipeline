@@ -3,7 +3,6 @@ from dotenv import dotenv_values
 
 
 def main():
-
     config = dotenv_values(".env")
     batch_result = fetch_batch_prediction_result(
         project_id=config["PROJECT_ID"],

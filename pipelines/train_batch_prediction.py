@@ -1,5 +1,6 @@
 from kfp.dsl import pipeline
 
+
 @pipeline(name="custom-model-bq-batch-prediction-pipeline")
 def custom_model_bq_batch_prediction_pipeline(
     project: str,
@@ -25,8 +26,10 @@ def custom_model_bq_batch_prediction_pipeline(
     batch_prediction_batch_size: int = 1000,
 ):
     from google_cloud_pipeline_components.aiplatform import (
-        CustomPythonPackageTrainingJobRunOp, ModelBatchPredictOp,
-        TabularDatasetCreateOp)
+        CustomPythonPackageTrainingJobRunOp,
+        ModelBatchPredictOp,
+        TabularDatasetCreateOp,
+    )
 
     # Create the dataset
     dataset_create_op = TabularDatasetCreateOp(

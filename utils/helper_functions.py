@@ -6,6 +6,7 @@ from datetime import datetime
 from google.cloud import bigquery, aiplatform
 from typing_extensions import Any
 
+
 # Generate a uuid of a specifed length(default=8)
 def generate_uuid(length: int = 8) -> str:
     return "".join(random.choices(string.ascii_lowercase + string.digits, k=length))
@@ -29,19 +30,19 @@ def get_query_create_test_set(
     WHERE pseudo_random > {train_split}
     """
 
+
 def load_yaml_file(path: str) -> Any:
-    with open(path, 'r') as file:
+    with open(path, "r") as file:
         data = yaml.safe_load(file)
-    
+
     return data
 
 
 def fetch_batch_prediction_result(
-        project_id: str,
-        bq_dataset_id: str,
-        batch_prediction_job_name: str,
+    project_id: str,
+    bq_dataset_id: str,
+    batch_prediction_job_name: str,
 ) -> pd.DataFrame:
-    
     # Load the batch prediction job details using the display name
     [batch_prediction_job] = aiplatform.BatchPredictionJob.list(
         filter=f'display_name="{batch_prediction_job_name}"'
@@ -59,13 +60,12 @@ def fetch_batch_prediction_result(
         project=project_id,
         credentials=aiplatform.initializer.global_config.credentials,
     )
-   
+
     # Fetch the data into a dataframe
     return bq_client.query(query).to_dataframe()
 
 
-
-def get_current_time():
+def get_current_time() -> str:
     now = datetime.now()
 
     return f"{now}"

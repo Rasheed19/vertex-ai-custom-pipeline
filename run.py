@@ -1,12 +1,9 @@
 from google.cloud import aiplatform, bigquery
 from dotenv import dotenv_values
 import click
-from utils import (
-    get_query_create_test_set, load_yaml_file
-) 
-from  pipelines import (
-    custom_model_bq_batch_prediction_pipeline, pipeline_compiler
-) 
+from utils import get_query_create_test_set, load_yaml_file
+from pipelines import custom_model_bq_batch_prediction_pipeline, pipeline_compiler
+
 
 @click.command(
     help="""
@@ -36,13 +33,9 @@ from  pipelines import (
     default=False,
     help="Enable caching or not",
 )
-def main(
-    cache: bool = False
-):
-
+def main(cache: bool = False):
     config = dotenv_values(".env")
     train_config = load_yaml_file("./config/training_config.yaml")
-
 
     # Initialize Vertex AI SDK
     aiplatform.init(
@@ -56,7 +49,6 @@ def main(
         project=config["PROJECT_ID"],
         credentials=aiplatform.initializer.global_config.credentials,
     )
-    
 
     # Source of the dataset
     DATA_SOURCE = "bq://bigquery-public-data.ml_datasets.census_adult_income"
@@ -67,9 +59,11 @@ def main(
     # Set name for the BigQuery source table for batch prediction
     BQ_INPUT_TABLE = "income_test_data"
     # Set the size(%) of the train set
-    TRAIN_SPLIT = 0.9    # we want 10% of the data for batch prediction; the rest will also be spliited latter
+    TRAIN_SPLIT = 0.9  # we want 10% of the data for batch prediction; the rest will also be spliited latter
     # Provide the container for training the model
-    TRAINING_CONTAINER = "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-23:latest"
+    TRAINING_CONTAINER = (
+        "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-23:latest"
+    )
     # Provide the container for serving the model
     SERVING_CONTAINER = "us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-23:latest"
     # Set the display name for training job
@@ -87,10 +81,10 @@ def main(
     bq_dataset = bigquery.Dataset(f"{config['PROJECT_ID']}.{BQ_DATASET_ID}")
     bq_dataset = bq_client.create_dataset(bq_dataset)
     print(f"Created dataset {bq_client.project}.{bq_dataset.dataset_id}")
-    
+
     # Query to create a test set from the source table
     query = get_query_create_test_set(
-        project_id=config['PROJECT_ID'],
+        project_id=config["PROJECT_ID"],
         bq_dataset_id=BQ_DATASET_ID,
         bq_input_table=BQ_INPUT_TABLE,
         train_split=TRAIN_SPLIT,
@@ -101,9 +95,8 @@ def main(
     # Call and compile pipeline
     pipeline_compiler(
         pipeline=custom_model_bq_batch_prediction_pipeline,
-        config_path_name=f"./config/{PIPELINE_FILE_NAME}"
+        config_path_name=f"./config/{PIPELINE_FILE_NAME}",
     )
-
 
     # Define the parameters for running the pipeline
     parameters = {
@@ -128,7 +121,6 @@ def main(
         "batch_prediction_destination_uri": f"bq://{config['PROJECT_ID']}.{BQ_DATASET_ID}",
     }
 
-
     # Create a Vertex AI Pipeline job
     job = aiplatform.PipelineJob(
         display_name=PIPELINE_DISPLAY_NAME,
@@ -142,5 +134,3 @@ def main(
 
 if __name__ == "__main__":
     main()
-
-
