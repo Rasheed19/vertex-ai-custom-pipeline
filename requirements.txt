@@ -1,0 +1,9 @@
+google-cloud-aiplatform
+google-cloud-bigquery
+pandas
+pyarrow
+kfp<2
+google-cloud-pipeline-components<2 
+db-dtypes 
+python-dotenv
+PyYAML

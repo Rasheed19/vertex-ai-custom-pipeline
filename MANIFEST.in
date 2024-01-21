@@ -1,0 +1,14 @@
+# Exclude directories
+prune python_package/.venv
+prune python_package/components
+prune python_package/config
+prune python_package/pipelines
+prune python_package/utils
+prune python_package/data
+
+# Exclude files
+exclude python_package/.env
+exclude python_package/.gitignore
+exclude python_package/requirements.txt
+exclude python_package/run.py
+exclude python_package/README.md
