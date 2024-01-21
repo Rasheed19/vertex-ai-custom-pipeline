@@ -6,7 +6,6 @@ found in https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/note
 
 ## Folder analysis
 1. `config` contains the component and pipeline configuration files
-1. `components` contains veterx component python files
 1. `pipelines` contains veterx pipeline python files
 1. `utils` contains helper functions 
 
